@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"goapibackend/internal/apis/handlers"
 	"goapibackend/internal/application/services"
@@ -9,6 +10,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"time"
 )
 
 func DbConnection() *gorm.DB {
@@ -28,6 +30,16 @@ func DbConnection() *gorm.DB {
 func main() {
 
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"POST, OPTIONS, GET, PUT, DELETE"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+
+		MaxAge: 12 * time.Hour,
+	}))
 	connectionDb := DbConnection()
 	userRepository := repository.UserImpl{Db: connectionDb}
 	userService := services.UserServiceImpl{
@@ -37,7 +49,7 @@ func main() {
 	handler := handlers.Handler{
 		UserService: userService,
 	}
-	r.GET("/signup", handler.SignUp)
+	r.POST("/signup", handler.SignUp)
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
 }

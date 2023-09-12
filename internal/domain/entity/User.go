@@ -14,6 +14,7 @@ type User struct {
 	LastName    string
 	Email       string
 	DegreeLevel string //bachelors,masters,professor
+	Password    string
 	Schedule    string
 	Location    string
 	CreatedAt   time.Time
