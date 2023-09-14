@@ -19,14 +19,34 @@ func (hn Handler) SignUp(c *gin.Context) {
 	var userDto dto.UserDto
 	err := c.BindJSON(&userDto)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "Error Parsing the Data",
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": fmt.Sprintf("Error Parsing the Data %t", err),
 		})
 		return
 	}
-	fmt.Println(userDto)
-	hn.UserService.Signup()
+	userID, err := hn.UserService.Signup(&userDto)
+	fmt.Println(err)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "pong",
+		"message": fmt.Sprintf("User Saved SuceessFully With Id -%d", userID),
+	})
+}
+
+func (hn Handler) GetAllUsers(c *gin.Context) {
+	users, err := hn.UserService.GetAllUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "successfully retrieved the list of user",
+		"data":    users,
 	})
 }

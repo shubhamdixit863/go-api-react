@@ -9,7 +9,7 @@ import (
 // Our entity which would be saved in the database
 
 type User struct {
-	ID          uint `gorm:"primaryKey"`
+	ID          uint `gorm:"primaryKey;autoIncrement:true"`
 	FirstName   string
 	LastName    string
 	Email       string
@@ -17,7 +17,7 @@ type User struct {
 	Password    string
 	Schedule    string
 	Location    string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	CreatedAt   time.Time      `gorm:"default:current_timestamp"`
+	UpdatedAt   time.Time      `gorm:"default:current_timestamp"`
 	DeletedAt   gorm.DeletedAt `gorm:"index"`
 }
