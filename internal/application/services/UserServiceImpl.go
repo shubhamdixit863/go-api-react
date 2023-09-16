@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"goapibackend/internal/domain/dto"
 	"goapibackend/internal/domain/repository"
 )
@@ -19,6 +20,19 @@ func (user UserServiceImpl) Signup(userDto *dto.UserDto) (uint, error) {
 	}
 	return addUser, nil
 
+}
+
+func (user UserServiceImpl) SignIn(userDto *dto.SignInDto) (uint, error) {
+
+	returnedUser, err := user.UserRepository.GetUserByEmail(userDto.Email)
+	if err != nil {
+		return 0, err
+	}
+	// We will check for password too
+	if returnedUser.Password != userDto.Password {
+		return 0, errors.New("UserName Or Pasword Dono't Match")
+	}
+	return 0, nil
 }
 
 func (user UserServiceImpl) GetAllUsers() ([]dto.UserDto, error) {

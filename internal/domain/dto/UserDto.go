@@ -15,6 +15,11 @@ type UserDto struct {
 	Degree    string `json:"degree"`
 }
 
+type SignInDto struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func (userdto *UserDto) ToEntity() *entity.User {
 	fmt.Println("Arrived here")
 	return &entity.User{

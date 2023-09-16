@@ -38,6 +38,15 @@ func (ui *UserImpl) GetAllUsers() ([]entity.User, error) {
 	return users, nil
 }
 
+func (ui *UserImpl) GetUserByEmail(email string) (entity.User, error) {
+	var user entity.User
+	tx := ui.Db.Where("email = ?", email).First(&user)
+	if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
+		return user, errors.New("user not found")
+	}
+	return user, nil
+}
+
 func (ui *UserImpl) AutoMigrate() error {
 	// We will write the migration part
 	userEntity := entity.User{}

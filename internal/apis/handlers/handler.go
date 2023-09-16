@@ -24,7 +24,7 @@ func (hn Handler) SignUp(c *gin.Context) {
 		})
 		return
 	}
-	userID, err := hn.UserService.Signup(&userDto)
+	_, err = hn.UserService.Signup(&userDto)
 	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -33,7 +33,29 @@ func (hn Handler) SignUp(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": fmt.Sprintf("User Saved SuceessFully With Id -%d", userID),
+		"message": fmt.Sprintf("User Saved SuceessFully"),
+	})
+}
+
+func (hn Handler) SignIn(c *gin.Context) {
+	var userDto dto.SignInDto
+	err := c.BindJSON(&userDto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": fmt.Sprintf("Error Parsing the Data %t", err),
+		})
+		return
+	}
+	_, err = hn.UserService.SignIn(&userDto)
+	fmt.Println(err)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("User LoggedIn SuceessFully"),
 	})
 }
 

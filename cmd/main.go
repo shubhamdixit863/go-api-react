@@ -41,6 +41,8 @@ func main() {
 		UserService: userService,
 	}
 	r.POST("/signup", handler.SignUp)
+	r.POST("/signin", handler.SignIn)
+
 	r.GET("/users", handler.GetAllUsers)
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
