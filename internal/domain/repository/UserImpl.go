@@ -11,6 +11,17 @@ type UserImpl struct {
 	Db *gorm.DB
 }
 
+func (ui *UserImpl) AddProject(userProject entity.UserProject) (uint, error) {
+
+	// Our Db query To save the User Project inside the db
+	tx := ui.Db.Create(&userProject)
+	if tx.Error != nil {
+		return userProject.ID, tx.Error
+	}
+	return userProject.ID, nil
+
+}
+
 func (ui *UserImpl) AddUser(user *entity.User) (uint, error) {
 	var alreadyExisting entity.User
 	// We will check here first if the user with email already exists
@@ -50,7 +61,8 @@ func (ui *UserImpl) GetUserByEmail(email string) (entity.User, error) {
 func (ui *UserImpl) AutoMigrate() error {
 	// We will write the migration part
 	userEntity := entity.User{}
-	err := ui.Db.AutoMigrate(&userEntity)
+	userProjectEntity := entity.UserProject{}
+	err := ui.Db.AutoMigrate(&userEntity, &userProjectEntity)
 	if err != nil {
 		return err
 	}

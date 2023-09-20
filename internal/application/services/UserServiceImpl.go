@@ -11,6 +11,15 @@ type UserServiceImpl struct {
 	UserRepository repository.IUserRepository
 }
 
+func (user UserServiceImpl) AddProject(projectDto *dto.UserProjectDto) (uint, error) {
+	projectId, err := user.UserRepository.AddProject(projectDto.ToEntity())
+	if err != nil {
+		return 0, err
+	}
+
+	return projectId, nil
+}
+
 func (user UserServiceImpl) Signup(userDto *dto.UserDto) (uint, error) {
 
 	// We will convert here

@@ -41,6 +41,8 @@ func main() {
 		UserService: userService,
 	}
 	r.POST("/signup", handler.SignUp)
+	r.POST("/addProject", handler.AddProject)
+
 	r.POST("/signin", handler.SignIn)
 
 	r.GET("/users", handler.GetAllUsers)

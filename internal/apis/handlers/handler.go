@@ -37,6 +37,28 @@ func (hn Handler) SignUp(c *gin.Context) {
 	})
 }
 
+func (hn Handler) AddProject(c *gin.Context) {
+	var userProjectDto dto.UserProjectDto
+	err := c.BindJSON(&userProjectDto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": fmt.Sprintf("Error Parsing the Data %t", err),
+		})
+		return
+	}
+	_, err = hn.UserService.AddProject(&userProjectDto)
+	fmt.Println(err)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("Project Saved SuceessFully"),
+	})
+}
+
 func (hn Handler) SignIn(c *gin.Context) {
 	var userDto dto.SignInDto
 	err := c.BindJSON(&userDto)
