@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	"goapibackend/internal/domain/dto"
 	"goapibackend/internal/domain/repository"
 )
@@ -9,6 +10,27 @@ import (
 type UserServiceImpl struct {
 	// The repository dependency
 	UserRepository repository.IUserRepository
+}
+
+func (user UserServiceImpl) GetAllProjects(page, limit int) ([]dto.UserProjectDto, error) {
+
+	// Call the service method
+	projects, count, err := user.UserRepository.GetProjects(page, limit)
+	fmt.Println(count)
+	if err != nil {
+		return nil, err
+	}
+	var userProjects []dto.UserProjectDto
+	for _, v := range projects {
+		up := dto.UserProjectDto{
+			ProjectName: v.ProjectName,
+			Description: v.Description,
+			FileName:    v.FileName,
+		}
+		userProjects = append(userProjects, up)
+	}
+	return userProjects, nil
+
 }
 
 func (user UserServiceImpl) AddProject(projectDto *dto.UserProjectDto) (uint, error) {

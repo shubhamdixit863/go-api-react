@@ -11,6 +11,17 @@ type UserImpl struct {
 	Db *gorm.DB
 }
 
+func (ui *UserImpl) GetProjects(currentPage, limit int) ([]entity.UserProject, int, error) {
+
+	var userProjects []entity.UserProject
+	tx := ui.Db.Limit(limit).Offset(currentPage * limit).Find(&userProjects)
+	if tx.Error != nil {
+		return nil, 0, tx.Error
+	}
+	return userProjects, 0, nil
+
+}
+
 func (ui *UserImpl) AddProject(userProject entity.UserProject) (uint, error) {
 
 	// Our Db query To save the User Project inside the db

@@ -6,6 +6,7 @@ import (
 	"goapibackend/internal/application/services"
 	"goapibackend/internal/domain/dto"
 	"net/http"
+	"strconv"
 )
 
 // This will be for handlers
@@ -56,6 +57,35 @@ func (hn Handler) AddProject(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("Project Saved SuceessFully"),
+	})
+}
+
+func (hn Handler) GetProject(c *gin.Context) {
+
+	// We will get the query params
+	page := c.Query("page")
+	limit := c.Query("limit")
+
+	pageInt, err2 := strconv.Atoi(page)
+	if err2 != nil {
+		pageInt = 1
+	}
+	limitInt, err2 := strconv.Atoi(limit)
+	if err2 != nil {
+		limitInt = 10
+	}
+
+	data, err := hn.UserService.GetAllProjects(pageInt, limitInt)
+	fmt.Println(err)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("SuceessFully Retrieved Projects"),
+		"data":    data,
 	})
 }
 
