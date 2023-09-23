@@ -98,7 +98,7 @@ func (hn Handler) SignIn(c *gin.Context) {
 		})
 		return
 	}
-	_, err = hn.UserService.SignIn(&userDto)
+	token, err := hn.UserService.SignIn(&userDto)
 	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -108,6 +108,7 @@ func (hn Handler) SignIn(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("User LoggedIn SuceessFully"),
+		"token":   token,
 	})
 }
 

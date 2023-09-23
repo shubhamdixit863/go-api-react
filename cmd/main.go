@@ -5,6 +5,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"goapibackend/internal/apis/handlers"
+	"goapibackend/internal/apis/middlewares"
 	"goapibackend/internal/application/services"
 	"goapibackend/internal/domain/repository"
 	"gorm.io/driver/postgres"
@@ -42,7 +43,7 @@ func main() {
 	}
 	r.POST("/signup", handler.SignUp)
 	r.POST("/project", handler.AddProject)
-	r.GET("/project", handler.GetProject)
+	r.GET("/project", middlewares.Authorize(), handler.GetProject)
 
 	r.POST("/signin", handler.SignIn)
 

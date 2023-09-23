@@ -12,10 +12,9 @@ type UserProjectDto struct {
 }
 
 type UserProjectDtoResponse struct {
-	ProjectName string `json:"projectName"`
-	Description string `json:"description"`
-	FileName    string `json:"fileName"` // Would be coming from file Service
-	Count       int    `json:"count"`
+	Projects     []UserProjectDto `json:"projects"`
+	TotalRecords int64            `json:"totalRecords"`
+	TotalPages   int64            `json:"totalPages"`
 }
 
 func (Up UserProjectDto) ToEntity() entity.UserProject {

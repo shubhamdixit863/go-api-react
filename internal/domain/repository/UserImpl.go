@@ -11,14 +11,17 @@ type UserImpl struct {
 	Db *gorm.DB
 }
 
-func (ui *UserImpl) GetProjects(currentPage, limit int) ([]entity.UserProject, int, error) {
+func (ui *UserImpl) GetProjects(currentPage, limit int) ([]entity.UserProject, int64, error) {
 
 	var userProjects []entity.UserProject
-	tx := ui.Db.Limit(limit).Offset(currentPage * limit).Find(&userProjects)
+	tx := ui.Db.Offset((currentPage - 1) * limit).Limit(limit).Find(&userProjects)
 	if tx.Error != nil {
 		return nil, 0, tx.Error
 	}
-	return userProjects, 0, nil
+
+	var count int64
+	ui.Db.Model(&entity.UserProject{}).Count(&count)
+	return userProjects, count, nil
 
 }
 

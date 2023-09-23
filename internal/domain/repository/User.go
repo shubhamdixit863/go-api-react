@@ -7,6 +7,6 @@ type IUserRepository interface {
 	GetAllUsers() ([]entity.User, error)
 	GetUserByEmail(email string) (entity.User, error)
 	AddProject(userProject entity.UserProject) (uint, error)
-	GetProjects(currentPage, limit int) ([]entity.UserProject, int, error)
+	GetProjects(currentPage, limit int) ([]entity.UserProject, int64, error)
 	AutoMigrate() error
 }

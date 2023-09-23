@@ -3,8 +3,11 @@ package services
 import (
 	"errors"
 	"fmt"
+	"github.com/golang-jwt/jwt/v5"
 	"goapibackend/internal/domain/dto"
 	"goapibackend/internal/domain/repository"
+	"math"
+	"time"
 )
 
 type UserServiceImpl struct {
@@ -12,7 +15,7 @@ type UserServiceImpl struct {
 	UserRepository repository.IUserRepository
 }
 
-func (user UserServiceImpl) GetAllProjects(page, limit int) ([]dto.UserProjectDto, error) {
+func (user UserServiceImpl) GetAllProjects(page, limit int) (*dto.UserProjectDtoResponse, error) {
 
 	// Call the service method
 	projects, count, err := user.UserRepository.GetProjects(page, limit)
@@ -29,7 +32,13 @@ func (user UserServiceImpl) GetAllProjects(page, limit int) ([]dto.UserProjectDt
 		}
 		userProjects = append(userProjects, up)
 	}
-	return userProjects, nil
+	totalPages := int64(math.Ceil(float64(count) / float64(limit)))
+
+	return &dto.UserProjectDtoResponse{
+		Projects:     userProjects,
+		TotalRecords: count,
+		TotalPages:   totalPages,
+	}, nil
 
 }
 
@@ -53,17 +62,39 @@ func (user UserServiceImpl) Signup(userDto *dto.UserDto) (uint, error) {
 
 }
 
-func (user UserServiceImpl) SignIn(userDto *dto.SignInDto) (uint, error) {
+// Method to create a jwt here ----https://pkg.go.dev/github.com/golang-jwt/jwt/v5#example-New-Hmac
+
+func CreateJwt(userName string) (string, error) {
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username": userName,
+		"nbf":      time.Date(2015, 10, 10, 12, 0, 0, 0, time.UTC).Unix(),
+		"exp":      time.Now().Add(10 * time.Minute).UnixNano(),
+	})
+	tokenString, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
+}
+
+func (user UserServiceImpl) SignIn(userDto *dto.SignInDto) (string, error) {
 
 	returnedUser, err := user.UserRepository.GetUserByEmail(userDto.Email)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 	// We will check for password too
 	if returnedUser.Password != userDto.Password {
-		return 0, errors.New("UserName Or Pasword Dono't Match")
+		return "", errors.New("UserName Or Pasword Dono't Match")
 	}
-	return 0, nil
+	// we have to issue the token here ---
+	createJwt, err := CreateJwt(userDto.Email)
+	if err != nil {
+		return "", err
+	}
+	return createJwt, nil
 }
 
 func (user UserServiceImpl) GetAllUsers() ([]dto.UserDto, error) {
