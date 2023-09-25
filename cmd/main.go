@@ -30,8 +30,14 @@ func DbConnection() *gorm.DB {
 func main() {
 
 	r := gin.Default()
+	config := cors.DefaultConfig()
 
-	r.Use(cors.Default())
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowCredentials = true
+	config.AllowHeaders = []string{"Authorization"}
+	r.Use(cors.New(config))
+
+	//r.Use(cors.Default())
 	connectionDb := DbConnection()
 	userRepository := repository.UserImpl{Db: connectionDb}
 	userService := services.UserServiceImpl{
