@@ -47,6 +47,7 @@ func main() {
 	handler := handlers.Handler{
 		UserService: userService,
 	}
+	r.GET("/", handler.Healthcheck)
 	r.POST("/signup", handler.SignUp)
 	r.POST("/project", handler.AddProject)
 	r.GET("/project", middlewares.Authorize(), handler.GetProject)

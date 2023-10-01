@@ -16,6 +16,13 @@ type Handler struct {
 	UserService services.IUserService
 }
 
+func (hn Handler) Healthcheck(c *gin.Context) {
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Service Is Running Fine",
+	})
+}
+
 func (hn Handler) SignUp(c *gin.Context) {
 	var userDto dto.UserDto
 	err := c.BindJSON(&userDto)
