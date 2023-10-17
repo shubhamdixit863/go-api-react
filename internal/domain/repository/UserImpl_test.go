@@ -11,8 +11,8 @@ import (
 
 func DbConnection() *gorm.DB {
 	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  "host=berry.db.elephantsql.com user=lwafzeku password=8s3aTiSlqis6ENkJvcZpyZ0yxiAA0XeZ dbname=lwafzeku  sslmode=disable TimeZone=Asia/Shanghai", // data source name, refer https://github.com/jackc/pgx
-		PreferSimpleProtocol: true,                                                                                                                                            // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
+		DSN:                  "host=goapibackend-db.cake0vsnlrsi.us-east-1.rds.amazonaws.com user=postgres password=Q3j2eynfz8mlUioFzReH dbname=postgres  sslmode=require TimeZone=Asia/Shanghai", // data source name, refer https://github.com/jackc/pgx
+		PreferSimpleProtocol: true,                                                                                                                                                                // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
 	}), &gorm.Config{})
 	if err != nil {
 
