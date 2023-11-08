@@ -2,17 +2,24 @@ package repository
 
 import (
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
+	"os"
 	"testing"
 )
 
 func DbConnection() *gorm.DB {
+	err := godotenv.Load("../../../.env")
+	if err != nil {
+		log.Fatalln("Cant find env")
+	}
+
 	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  "host=goapibackend-db.cake0vsnlrsi.us-east-1.rds.amazonaws.com user=postgres password=Q3j2eynfz8mlUioFzReH dbname=postgres  sslmode=require TimeZone=Asia/Shanghai", // data source name, refer https://github.com/jackc/pgx
-		PreferSimpleProtocol: true,                                                                                                                                                                // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
+		DSN:                  fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=require TimeZone=Asia/Shanghai", os.Getenv("HOST"), os.Getenv("USERNAME"), os.Getenv("PASSWORD"), os.Getenv("DB")), // data source name, refer https://github.com/jackc/pgx
+		PreferSimpleProtocol: true,                                                                                                                                                                          // disables implicit prepared statement usage. By default pgx automatically uses the extended protocol
 	}), &gorm.Config{})
 	if err != nil {
 
