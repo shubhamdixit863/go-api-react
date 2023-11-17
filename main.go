@@ -5,14 +5,15 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"goapibackend/internal/apis/handlers"
-	"goapibackend/internal/apis/middlewares"
-	"goapibackend/internal/application/services"
-	"goapibackend/internal/domain/repository"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
 	"os"
+
+	"goapibackend/internal/apis/handlers"
+	"goapibackend/internal/apis/middlewares"
+	"goapibackend/internal/application/services"
+	"goapibackend/internal/domain/repository"
 )
 
 func DbConnection() *gorm.DB {
@@ -45,6 +46,10 @@ func main() {
 	r.Use(cors.New(config))
 
 	userRepository := repository.UserImpl{Db: connectionDb}
+	err := userRepository.AutoMigrate()
+	if err != nil {
+		log.Fatalln("error doing migration", err)
+	}
 	userService := services.UserServiceImpl{
 		UserRepository: &userRepository,
 	}
