@@ -70,7 +70,7 @@ spec:
   metadata:
     name: api-db-config
   data:
-    HOST: "goapirdsdeda0bf.cr7g9pr3mfgk.us-east-2.rds.amazonaws.com"
+    HOST: "goapirds3127c92.cr7g9pr3mfgk.us-east-2.rds.amazonaws.com"
     USERNAME: "myusername"
     PASSWORD: "mypassword"
     DB: "postgres"
