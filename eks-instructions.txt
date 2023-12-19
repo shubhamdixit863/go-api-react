@@ -62,3 +62,5 @@ https://aws.amazon.com/cli/
    ```
 
 You should now see the nodes of your EKS cluster. If you encounter any issues, double-check the setup, especially IAM permissions and cluster access. Make sure the AWS user has the necessary permissions to EKS and the nodes.
+
+https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
