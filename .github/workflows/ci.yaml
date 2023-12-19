@@ -8,6 +8,12 @@ on:
 
 jobs:
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses:  actions/checkout@v3
+        run: make test
+
   build:
 
     runs-on: ubuntu-latest
