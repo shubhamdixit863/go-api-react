@@ -34,3 +34,25 @@ jobs:
 
       - name: Push the Image to Docker Hub
         run: docker push shubhamdixit863/goapibackendbeta:${{env.IMAGE_TAG}}
+
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - uses: actions/checkout@v2
+      - name: Run kubectl
+        uses: nikosch86/github-action-eks-kubectl@main
+        with:
+          command: "apply deployment.yaml"
+        env:
+          EKS_CLUSTER: cluster-eksCluster-d8da1b5

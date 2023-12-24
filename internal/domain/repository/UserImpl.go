@@ -2,8 +2,9 @@ package repository
 
 import (
 	"errors"
-	"goapibackend/internal/domain/entity"
 	"gorm.io/gorm"
+
+	"goapibackend/internal/domain/entity"
 )
 
 type UserImpl struct {
