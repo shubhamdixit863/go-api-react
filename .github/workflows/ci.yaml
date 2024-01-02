@@ -38,14 +38,19 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [build,test]
+    needs: [ build,test ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      # Add step to read Kubeconfig from file
+      - name: Set Kubeconfig
+        run: echo "KUBECONFIG=$(cat kube.config)" >> $GITHUB_ENV
+
       - name: Deployment
         uses: Pablommr/kubernetes-eks@v1.2.0
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+          KUBECONFIG: ${{ env.KUBECONFIG }}
           KUBE_YAML: deployment.yaml
