@@ -45,6 +45,17 @@ func main() {
 	config.AllowHeaders = []string{"Authorization", "Content-Type"}
 	r.Use(cors.New(config))
 
+	// Admin routes
+	adminHandler := handlers.AdminHandler{
+		AdminService: &services.AdminServiceImpl{AdminRepo: &repository.AdminRepositoryImpl{Db: connectionDb}},
+	}
+
+	admin := r.Group("/admin")
+	{
+		admin.GET("/users", adminHandler.GetUsers)
+
+	}
+
 	userRepository := repository.UserImpl{Db: connectionDb}
 	err := userRepository.AutoMigrate()
 	if err != nil {
@@ -65,6 +76,8 @@ func main() {
 	r.POST("/signin", handler.SignIn)
 
 	r.GET("/users", handler.GetAllUsers)
+
+	// Admin apis
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 
