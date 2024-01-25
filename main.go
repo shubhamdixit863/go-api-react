@@ -53,6 +53,7 @@ func main() {
 	admin := r.Group("/admin")
 	{
 		admin.GET("/users", adminHandler.GetUsers)
+		admin.GET("/user/:id", adminHandler.GetUser)
 
 	}
 

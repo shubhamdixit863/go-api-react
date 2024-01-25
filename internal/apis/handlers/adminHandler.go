@@ -40,3 +40,32 @@ func (ad *AdminHandler) GetUsers(c *gin.Context) {
 	})
 
 }
+
+func (ad *AdminHandler) GetUser(c *gin.Context) {
+	id := c.Param("id")
+
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	user, err := ad.AdminService.GetUserById(idInt)
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+
+		return
+
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Success",
+		"data":    user,
+	})
+
+}
